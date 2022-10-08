@@ -3,8 +3,10 @@ import './App.css';
 
 const App = () => {
 	const canvas = useRef<HTMLCanvasElement>(null);
-	const [ctx, setCtx] = useState<any>(null);
+	const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 	const [isDrawing, setIsDrawing] = useState(false);
+	const [color, setColor] = useState('black');
+	const [lineWidth, setLineWidth] = useState(1);
 
 	useEffect(() => {
 		const ctx = canvas.current;
@@ -36,6 +38,8 @@ const App = () => {
 	};
 
 	const onStart = (e: MouseEvent | TouchEvent): void => {
+		if (!ctx) return;
+
 		const { x, y } = getMousePos(canvas.current, e);
 		ctx.moveTo(x, y);
 		ctx.beginPath();
@@ -43,28 +47,47 @@ const App = () => {
 	};
 
 	const onMove = (e: MouseEvent | TouchEvent) => {
-		if (!isDrawing) return;
+		if (!ctx || !isDrawing) return;
 
 		const { x, y } = getMousePos(canvas.current, e);
 		ctx.lineTo(x, y);
+		ctx.strokeStyle = color;
+		ctx.lineWidth = lineWidth;
 		ctx.stroke();
 	};
 
 	const onEnd = (e: MouseEvent | TouchEvent) => {
+		if (!ctx) return;
+
 		ctx.closePath();
 		setIsDrawing(false);
 	};
 
 	return (
-		<canvas
-			ref={canvas}
-			onMouseDown={onStart}
-			onMouseMove={onMove}
-			onMouseUp={onEnd}
-			onTouchStart={onStart}
-			onTouchMove={onMove}
-			onTouchEnd={onEnd}
-		></canvas>
+		<div>
+			<nav>
+				<input
+					type="color"
+					onChange={(e) => setColor(e.target.value)}
+				/>
+				<input
+					type="number"
+					min={1}
+					max={50}
+					value={lineWidth}
+					onChange={(e) => setLineWidth(parseInt(e.target.value))}
+				/>
+			</nav>
+			<canvas
+				ref={canvas}
+				onMouseDown={onStart}
+				onMouseMove={onMove}
+				onMouseUp={onEnd}
+				onTouchStart={onStart}
+				onTouchMove={onMove}
+				onTouchEnd={onEnd}
+			></canvas>
+		</div>
 	);
 };
 
