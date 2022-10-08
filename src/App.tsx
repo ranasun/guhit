@@ -1,32 +1,48 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
 import './App.css';
+
 const App = () => {
-	const canvas = useRef<any>(null);
+	const canvas = useRef<HTMLCanvasElement>(null);
 	const [ctx, setCtx] = useState<any>(null);
 	const [isDrawing, setIsDrawing] = useState(false);
 
 	useEffect(() => {
-		canvas.current.width = window.innerWidth;
-		canvas.current.height = window.innerHeight;
-		setCtx(canvas.current.getContext('2d'));
+		const ctx = canvas.current;
+
+		if (ctx) {
+			ctx.width = window.innerWidth;
+			ctx.height = window.innerHeight;
+			setCtx(ctx.getContext('2d'));
+		}
 	}, []);
 
-	const getMousePos = (canvas: HTMLCanvasElement, e: MouseEvent) => {
-		var rect = canvas.getBoundingClientRect();
-		return {
-			x: e.clientX - rect.left,
-			y: e.clientY - rect.top,
-		};
+	const getMousePos = (canvas: HTMLCanvasElement | null, e: any) => {
+		let pos = { x: 0, y: 0 };
+
+		if (!canvas) return pos;
+
+		const { left, top } = canvas.getBoundingClientRect();
+
+		let ev = e;
+
+		if (e.type.includes('touch')) {
+			ev = e.touches[0];
+		}
+
+		pos.x = ev.clientX - left;
+		pos.y = ev.clientY - top;
+
+		return pos;
 	};
 
-	const onMouseDown = (e: MouseEvent): void => {
+	const onStart = (e: MouseEvent | TouchEvent): void => {
 		const { x, y } = getMousePos(canvas.current, e);
 		ctx.moveTo(x, y);
 		ctx.beginPath();
 		setIsDrawing(true);
 	};
 
-	const onMouseMove = (e: MouseEvent) => {
+	const onMove = (e: MouseEvent | TouchEvent) => {
 		if (!isDrawing) return;
 
 		const { x, y } = getMousePos(canvas.current, e);
@@ -34,7 +50,7 @@ const App = () => {
 		ctx.stroke();
 	};
 
-	const onMouseUp = (e: MouseEvent) => {
+	const onEnd = (e: MouseEvent | TouchEvent) => {
 		ctx.closePath();
 		setIsDrawing(false);
 	};
@@ -42,9 +58,12 @@ const App = () => {
 	return (
 		<canvas
 			ref={canvas}
-			onMouseDown={onMouseDown}
-			onMouseUp={onMouseUp}
-			onMouseMove={onMouseMove}
+			onMouseDown={onStart}
+			onMouseMove={onMove}
+			onMouseUp={onEnd}
+			onTouchStart={onStart}
+			onTouchMove={onMove}
+			onTouchEnd={onEnd}
 		></canvas>
 	);
 };
