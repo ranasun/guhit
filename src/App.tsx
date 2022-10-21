@@ -2,6 +2,7 @@ import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
 import './App.css';
 import Toolbar from './components/Toolbar';
 import Color from './components/Color';
+import DownloadButton from './components/DownloadButton';
 
 const App = () => {
 	const canvas = useRef<HTMLCanvasElement>(null);
@@ -69,6 +70,7 @@ const App = () => {
 
 	return (
 		<div>
+			<DownloadButton canvas={canvas.current} />
 			<Toolbar>
 				{colors.map((item) => (
 					<Color
@@ -76,7 +78,7 @@ const App = () => {
 						selected={color}
 						color={item}
 						onClick={() => setColor(item)}
-				/>
+					/>
 				))}
 			</Toolbar>
 
