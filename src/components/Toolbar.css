@@ -1,0 +1,15 @@
+#toolbar {
+	background: white;
+	border: 1px solid #ccc;
+	top: 50%;
+	bottom: 50%;
+	transform: translate(0, -50%);
+	height: max-content;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 20px 10px;
+	border-radius: 0 5px 5px 0;
+	border-left: 0px;
+}
