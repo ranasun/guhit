@@ -8,7 +8,7 @@ const App = () => {
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 	const [isDrawing, setIsDrawing] = useState(false);
-	const [color, setColor] = useState('black');
+	const [color, setColor] = useState('#000000');
 	const [lineWidth, setLineWidth] = useState(1);
 
 	useEffect(() => {
