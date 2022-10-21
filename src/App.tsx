@@ -1,5 +1,7 @@
 import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
 import './App.css';
+import Toolbar from './components/Toolbar';
+import Color from './components/Color';
 
 const App = () => {
 	const canvas = useRef<HTMLCanvasElement>(null);
@@ -67,19 +69,17 @@ const App = () => {
 
 	return (
 		<div>
-			<nav>
-				<input
-					type="color"
-					onChange={(e) => setColor(e.target.value)}
+			<Toolbar>
+				{colors.map((item) => (
+					<Color
+						key={item}
+						selected={color}
+						color={item}
+						onClick={() => setColor(item)}
 				/>
-				<input
-					type="number"
-					min={1}
-					max={50}
-					value={lineWidth}
-					onChange={(e) => setLineWidth(parseInt(e.target.value))}
-				/>
-			</nav>
+				))}
+			</Toolbar>
+
 			<canvas
 				ref={canvas}
 				onMouseDown={onStart}
