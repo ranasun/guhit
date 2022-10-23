@@ -14,6 +14,7 @@ const colors = [
 	'#13ae5c',
 	'#0499ff',
 	'#9747ff',
+	'#ffffff',
 ];
 
 const App = () => {
