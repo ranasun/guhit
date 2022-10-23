@@ -19,6 +19,8 @@ const Canvas = forwardRef<HTMLCanvasElement, Props>(
 		const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 		const [isDrawing, setIsDrawing] = useState(false);
 		const [lineWidth, setLineWidth] = useState(3);
+		const [x, setX] = useState(0);
+		const [y, setY] = useState(0);
 
 		useImperativeHandle<HTMLCanvasElement | null, HTMLCanvasElement | null>(
 			forwardedRef,
@@ -28,7 +30,6 @@ const Canvas = forwardRef<HTMLCanvasElement, Props>(
 
 		useEffect(() => {
 			const canvas = ref.current;
-
 			if (canvas) {
 				canvas.width = window.innerWidth;
 				canvas.height = window.innerHeight;
@@ -38,33 +39,32 @@ const Canvas = forwardRef<HTMLCanvasElement, Props>(
 
 		useEffect(() => {
 			if (!ctx) return;
-
 			ctx.strokeStyle = color;
 			ctx.lineWidth = lineWidth;
 			ctx.lineCap = 'round';
 		}, [ctx, color]);
 
-		const onStart = (e: MouseEvent | TouchEvent): void => {
-			if (!ctx) return;
-
+		const onMove = (e: MouseEvent | TouchEvent) => {
 			const { x, y } = getXY(ref.current, e);
+			setX(x);
+			setY(y);
+
+			if (isDrawing) {
+				if (!ctx) return;
+				ctx.lineTo(x, y);
+				ctx.stroke();
+			}
+		};
+
+		const onStart = (): void => {
+			if (!ctx) return;
 			ctx.moveTo(x, y);
 			ctx.beginPath();
 			setIsDrawing(true);
 		};
 
-		const onMove = (e: MouseEvent | TouchEvent) => {
-			if (!ctx || !isDrawing) return;
-
-			const { x, y } = getXY(ref.current, e);
-			ctx.lineTo(x, y);
-
-			ctx.stroke();
-		};
-
 		const onEnd = () => {
 			if (!ctx) return;
-
 			ctx.closePath();
 			setIsDrawing(false);
 		};

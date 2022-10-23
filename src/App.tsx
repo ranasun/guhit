@@ -2,31 +2,37 @@ import { useState, useRef, useEffect } from 'react';
 import Toolbar from './components/Toolbar';
 import Color from './components/Color';
 import Canvas from './Canvas';
-import DownloadButton from './components/DownloadButton';
+import Button from './components/Button';
+import { canvasToPng } from './common/utils';
 import './App.css';
+
+const colors = [
+	'#000000',
+	'#f14922',
+	'#ffa629',
+	'#ffcd2a',
+	'#13ae5c',
+	'#0499ff',
+	'#9747ff',
+];
 
 const App = () => {
 	const ref = useRef<HTMLCanvasElement>(null);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
-	const [color, setColor] = useState('#000000');
+	const [color, setColor] = useState(colors[0]);
+	const [filename, setFilename] = useState('Untitled1');
 
 	useEffect(() => {
 		setCanvas(ref.current);
 	}, [ref]);
 
-	const colors = [
-		'#000000',
-		'#f14922',
-		'#ffa629',
-		'#ffcd2a',
-		'#13ae5c',
-		'#0499ff',
-		'#9747ff',
-	];
+	const downloadHandler = () => {
+		canvasToPng(canvas, filename);
+	};
 
 	return (
 		<>
-			<DownloadButton canvas={canvas} />
+			<Button onClick={downloadHandler}>Download</Button>
 			<Toolbar>
 				{colors.map((item) => (
 					<Color
