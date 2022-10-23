@@ -10,7 +10,7 @@ const App = () => {
 	const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 	const [isDrawing, setIsDrawing] = useState(false);
 	const [color, setColor] = useState('#000000');
-	const [lineWidth, setLineWidth] = useState(1);
+	const [lineWidth, setLineWidth] = useState(3);
 
 	useEffect(() => {
 		const canvas = ref.current;
