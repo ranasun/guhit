@@ -6,26 +6,26 @@ import DownloadButton from './components/DownloadButton';
 import './App.css';
 
 const App = () => {
-	const canvas = useRef<HTMLCanvasElement>(null);
+	const ref = useRef<HTMLCanvasElement>(null);
 	const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 	const [isDrawing, setIsDrawing] = useState(false);
 	const [color, setColor] = useState('#000000');
 	const [lineWidth, setLineWidth] = useState(1);
 
 	useEffect(() => {
-		const ctx = canvas.current;
+		const canvas = ref.current;
 
-		if (ctx) {
-			ctx.width = window.innerWidth;
-			ctx.height = window.innerHeight;
-			setCtx(ctx.getContext('2d'));
+		if (canvas) {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			setCtx(canvas.getContext('2d'));
 		}
 	}, []);
 
 	const onStart = (e: MouseEvent | TouchEvent): void => {
 		if (!ctx) return;
 
-		const { x, y } = getXY(canvas.current, e);
+		const { x, y } = getXY(ref.current, e);
 		ctx.moveTo(x, y);
 		ctx.beginPath();
 		setIsDrawing(true);
@@ -34,7 +34,7 @@ const App = () => {
 	const onMove = (e: MouseEvent | TouchEvent) => {
 		if (!ctx || !isDrawing) return;
 
-		const { x, y } = getXY(canvas.current, e);
+		const { x, y } = getXY(ref.current, e);
 		ctx.lineTo(x, y);
 		ctx.strokeStyle = color;
 		ctx.lineWidth = lineWidth;
@@ -60,7 +60,7 @@ const App = () => {
 
 	return (
 		<div>
-			<DownloadButton canvas={canvas.current} />
+			<DownloadButton canvas={ref.current} />
 			<Toolbar>
 				{colors.map((item) => (
 					<Color
@@ -73,7 +73,7 @@ const App = () => {
 			</Toolbar>
 
 			<canvas
-				ref={canvas}
+				ref={ref}
 				onMouseDown={onStart}
 				onMouseMove={onMove}
 				onMouseUp={onEnd}
