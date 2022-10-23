@@ -20,7 +20,15 @@ const App = () => {
 			canvas.height = window.innerHeight;
 			setCtx(canvas.getContext('2d'));
 		}
-	}, []);
+	}, [ref]);
+
+	useEffect(() => {
+		if (!ctx) return;
+
+		ctx.strokeStyle = color;
+		ctx.lineWidth = lineWidth;
+		ctx.lineCap = 'round';
+	}, [ctx]);
 
 	const onStart = (e: MouseEvent | TouchEvent): void => {
 		if (!ctx) return;
@@ -36,8 +44,7 @@ const App = () => {
 
 		const { x, y } = getXY(ref.current, e);
 		ctx.lineTo(x, y);
-		ctx.strokeStyle = color;
-		ctx.lineWidth = lineWidth;
+
 		ctx.stroke();
 	};
 
@@ -59,7 +66,7 @@ const App = () => {
 	];
 
 	return (
-		<div>
+		<>
 			<DownloadButton canvas={ref.current} />
 			<Toolbar>
 				{colors.map((item) => (
@@ -81,7 +88,7 @@ const App = () => {
 				onTouchMove={onMove}
 				onTouchEnd={onEnd}
 			></canvas>
-		</div>
+		</>
 	);
 };
 
