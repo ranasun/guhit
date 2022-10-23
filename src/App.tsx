@@ -1,59 +1,18 @@
-import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
-import { getXY } from './common/utils';
+import { useState, useRef, useEffect } from 'react';
 import Toolbar from './components/Toolbar';
 import Color from './components/Color';
+import Canvas from './Canvas';
 import DownloadButton from './components/DownloadButton';
 import './App.css';
 
 const App = () => {
 	const ref = useRef<HTMLCanvasElement>(null);
-	const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
-	const [isDrawing, setIsDrawing] = useState(false);
+	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 	const [color, setColor] = useState('#000000');
-	const [lineWidth, setLineWidth] = useState(3);
 
 	useEffect(() => {
-		const canvas = ref.current;
-
-		if (canvas) {
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-			setCtx(canvas.getContext('2d'));
-		}
+		setCanvas(ref.current);
 	}, [ref]);
-
-	useEffect(() => {
-		if (!ctx) return;
-
-		ctx.strokeStyle = color;
-		ctx.lineWidth = lineWidth;
-		ctx.lineCap = 'round';
-	}, [ctx]);
-
-	const onStart = (e: MouseEvent | TouchEvent): void => {
-		if (!ctx) return;
-
-		const { x, y } = getXY(ref.current, e);
-		ctx.moveTo(x, y);
-		ctx.beginPath();
-		setIsDrawing(true);
-	};
-
-	const onMove = (e: MouseEvent | TouchEvent) => {
-		if (!ctx || !isDrawing) return;
-
-		const { x, y } = getXY(ref.current, e);
-		ctx.lineTo(x, y);
-
-		ctx.stroke();
-	};
-
-	const onEnd = () => {
-		if (!ctx) return;
-
-		ctx.closePath();
-		setIsDrawing(false);
-	};
 
 	const colors = [
 		'#000000',
@@ -67,7 +26,7 @@ const App = () => {
 
 	return (
 		<>
-			<DownloadButton canvas={ref.current} />
+			<DownloadButton canvas={canvas} />
 			<Toolbar>
 				{colors.map((item) => (
 					<Color
@@ -78,16 +37,7 @@ const App = () => {
 					/>
 				))}
 			</Toolbar>
-
-			<canvas
-				ref={ref}
-				onMouseDown={onStart}
-				onMouseMove={onMove}
-				onMouseUp={onEnd}
-				onTouchStart={onStart}
-				onTouchMove={onMove}
-				onTouchEnd={onEnd}
-			></canvas>
+			<Canvas ref={ref} color={color} />
 		</>
 	);
 };
