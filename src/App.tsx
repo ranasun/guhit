@@ -1,8 +1,9 @@
 import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
-import './App.css';
+import { getXY } from './common/utils';
 import Toolbar from './components/Toolbar';
 import Color from './components/Color';
 import DownloadButton from './components/DownloadButton';
+import './App.css';
 
 const App = () => {
 	const canvas = useRef<HTMLCanvasElement>(null);
@@ -21,29 +22,10 @@ const App = () => {
 		}
 	}, []);
 
-	const getMousePos = (canvas: HTMLCanvasElement | null, e: any) => {
-		let pos = { x: 0, y: 0 };
-
-		if (!canvas) return pos;
-
-		const { left, top } = canvas.getBoundingClientRect();
-
-		let ev = e;
-
-		if (e.type.includes('touch')) {
-			ev = e.touches[0];
-		}
-
-		pos.x = ev.clientX - left;
-		pos.y = ev.clientY - top;
-
-		return pos;
-	};
-
 	const onStart = (e: MouseEvent | TouchEvent): void => {
 		if (!ctx) return;
 
-		const { x, y } = getMousePos(canvas.current, e);
+		const { x, y } = getXY(canvas.current, e);
 		ctx.moveTo(x, y);
 		ctx.beginPath();
 		setIsDrawing(true);
@@ -52,7 +34,7 @@ const App = () => {
 	const onMove = (e: MouseEvent | TouchEvent) => {
 		if (!ctx || !isDrawing) return;
 
-		const { x, y } = getMousePos(canvas.current, e);
+		const { x, y } = getXY(canvas.current, e);
 		ctx.lineTo(x, y);
 		ctx.strokeStyle = color;
 		ctx.lineWidth = lineWidth;
