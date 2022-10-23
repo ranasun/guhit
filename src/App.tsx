@@ -66,7 +66,15 @@ const App = () => {
 		setIsDrawing(false);
 	};
 
-	const colors = ['#000000', '#f97315', '#ebb305', '#22c55d', '#3c82f6'];
+	const colors = [
+		'#000000',
+		'#f14922',
+		'#ffa629',
+		'#ffcd2a',
+		'#13ae5c',
+		'#0499ff',
+		'#9747ff',
+	];
 
 	return (
 		<div>
