@@ -41,7 +41,7 @@ const App = () => {
 		ctx.stroke();
 	};
 
-	const onEnd = (e: MouseEvent | TouchEvent) => {
+	const onEnd = () => {
 		if (!ctx) return;
 
 		ctx.closePath();
