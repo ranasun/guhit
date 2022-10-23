@@ -20,7 +20,7 @@ const App = () => {
 	const ref = useRef<HTMLCanvasElement>(null);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 	const [color, setColor] = useState(colors[0]);
-	const [filename, setFilename] = useState('Untitled1');
+	const [filename, setFilename] = useState('Untitled');
 
 	useEffect(() => {
 		setCanvas(ref.current);
@@ -32,6 +32,14 @@ const App = () => {
 
 	return (
 		<>
+			<div id="filename">
+				<input
+					type="text"
+					value={filename}
+					onChange={(e) => setFilename(e.target.value)}
+					onFocus={(e) => e.target.select()}
+				/>
+			</div>
 			<Button onClick={downloadHandler}>Download</Button>
 			<Toolbar>
 				{colors.map((item) => (
