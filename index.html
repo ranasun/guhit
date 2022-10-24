@@ -9,26 +9,32 @@
 		<link
 			rel="apple-touch-icon"
 			sizes="180x180"
-			href="./images/apple-touch-icon.png"
+			href="/images/apple-touch-icon.png"
 		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="32x32"
-			href="./images/favicon-32x32.png"
+			href="/images/favicon-32x32.png"
 		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="16x16"
-			href="./images/favicon-16x16.png"
+			href="/images/favicon-16x16.png"
 		/>
-		<link rel="manifest" href="./site.webmanifest" />
+		<link rel="manifest" href="site.webmanifest" />
 		<title>Guhit</title>
 	</head>
 	<body>
 		<div id="root"></div>
-		<script src="./pwa.js"></script>
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('sw.js').then(() => {
+					console.log('Service Worker Registered');
+				});
+			}
+		</script>
 		<script type="module" src="/src/main.tsx"></script>
 	</body>
 </html>

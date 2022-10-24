@@ -2,10 +2,9 @@
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open('invoice-generator').then((cache) => cache.addAll([
-      'index.html',
-      'pwa.js',
-      'sw.js',
+    caches.open('guhit').then((cache) => cache.addAll([
+      './index.html',
+      './sw.js',
       './site.webmanifest',
       './images/android-chrome-192x192.png',
       './images/apple-touch-icon.png',
