@@ -9,28 +9,34 @@
 		<link
 			rel="apple-touch-icon"
 			sizes="180x180"
-			href="./images/apple-touch-icon.png"
+			href="/guhit/images/apple-touch-icon.png"
 		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="32x32"
-			href="./images/favicon-32x32.png"
+			href="/guhit/images/favicon-32x32.png"
 		/>
 		<link
 			rel="icon"
 			type="image/png"
 			sizes="16x16"
-			href="./images/favicon-16x16.png"
+			href="/guhit/images/favicon-16x16.png"
 		/>
-		<link rel="manifest" href="data:application/manifest+json;base64,ewoJIm5hbWUiOiAiR3VoaXQiLAoJInNob3J0X25hbWUiOiAiR3VoaXQiLAoJInN0YXJ0X3VybCI6ICIvZ3VoaXQvIiwKCSJzY29wZSI6ICIvZ3VoaXQvIiwKCSJpY29ucyI6IFsKCQl7CgkJCSJzcmMiOiAiL2ltYWdlcy9hbmRyb2lkLWNocm9tZS0xOTJ4MTkyLnBuZyIsCgkJCSJzaXplcyI6ICIxOTJ4MTkyIiwKCQkJInR5cGUiOiAiaW1hZ2UvcG5nIgoJCX0sCgkJewoJCQkic3JjIjogIi9pbWFnZXMvYW5kcm9pZC1jaHJvbWUtNTEyeDUxMi5wbmciLAoJCQkic2l6ZXMiOiAiNTEyeDUxMiIsCgkJCSJ0eXBlIjogImltYWdlL3BuZyIKCQl9CgldLAoJInRoZW1lX2NvbG9yIjogIiMwMDAwMDAiLAoJImJhY2tncm91bmRfY29sb3IiOiAiIzAwMDAwMCIsCgkiZGlzcGxheSI6ICJzdGFuZGFsb25lIgp9Cg==" />
+		<link rel="manifest" href="site.webmanifest" />
 		<title>Guhit</title>
 		<script type="module" crossorigin src="/guhit/assets/index.51938141.js"></script>
 		<link rel="stylesheet" href="/guhit/assets/index.4fa164cf.css">
 	</head>
 	<body>
 		<div id="root"></div>
-		<script src="./pwa.js"></script>
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('sw.js').then(() => {
+					console.log('Service Worker Registered');
+				});
+			}
+		</script>
 		
 	</body>
 </html>
