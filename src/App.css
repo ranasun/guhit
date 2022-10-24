@@ -24,6 +24,7 @@ canvas {
 
 #filename input {
 	border: none;
+	text-align: center;
 }
 
 #filename input:focus {
