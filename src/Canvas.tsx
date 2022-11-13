@@ -88,6 +88,7 @@ const Canvas = forwardRef<HTMLCanvasElement, Props>(
 				onTouchStart={onStart}
 				onTouchMove={onMove}
 				onTouchEnd={onEnd}
+				onMouseOut={onEnd}
 			></canvas>
 		);
 	}
