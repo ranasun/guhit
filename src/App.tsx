@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, KeyboardEventHandler, SyntheticEvent, KeyboardEvent } from 'react';
 import Toolbar from './components/Toolbar';
 import Color from './components/Color';
 import Canvas from './Canvas';
@@ -17,11 +17,19 @@ const colors = [
 	'#ffffff',
 ];
 
+type path = {
+	x: number,
+	y: number,
+	color: string,
+	lineWidth: number
+};
+
 const App = () => {
 	const ref = useRef<HTMLCanvasElement>(null);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 	const [color, setColor] = useState(colors[0]);
 	const [filename, setFilename] = useState('Untitled');
+	const [memory, setMemory] = useState<[path[]] | []>([]);
 
 	useEffect(() => {
 		setCanvas(ref.current);
@@ -31,8 +39,52 @@ const App = () => {
 		canvasToPng(canvas, filename);
 	};
 
+	const onDrawEnd = (result: path[]) => {
+		setMemory((m) => [...m, result] as [path[]]);
+	}
+
+	const handleUndo = () => {
+		const canvas = ref.current;
+		const ctx = canvas?.getContext('2d');
+
+		if (!canvas || !ctx) return;
+
+		memory.pop();
+
+		setMemory((n: any) => [...memory]);
+
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		memory.forEach((path) => {
+			ctx.beginPath();
+
+			path.forEach((point, i: number) => {
+				ctx.strokeStyle = point.color
+				ctx.lineWidth = point.lineWidth;
+
+				if (i === 0) {
+					ctx.moveTo(point.x, point.y);
+				} else {
+					ctx.lineTo(point.x, point.y);
+				}
+
+				ctx.stroke();
+			})
+
+			ctx.closePath();
+		});
+
+		ctx.strokeStyle = color;
+	}
+
+	const handleKeypress = (e: KeyboardEvent<HTMLElement>) => {
+		if (e.code === 'KeyZ' && e.metaKey) {
+			handleUndo();
+		}
+	}
+
 	return (
-		<>
+		<main onKeyDown={handleKeypress} tabIndex={0}>
 			<div id="filename">
 				<input
 					type="text"
@@ -42,6 +94,7 @@ const App = () => {
 				/>
 			</div>
 			<Button onClick={downloadHandler}>Download</Button>
+
 			<Toolbar>
 				{colors.map((item) => (
 					<Color
@@ -52,8 +105,8 @@ const App = () => {
 					/>
 				))}
 			</Toolbar>
-			<Canvas ref={ref} color={color} />
-		</>
+			<Canvas ref={ref} color={color} onDrawEnd={onDrawEnd} />
+		</main>
 	);
 };
 

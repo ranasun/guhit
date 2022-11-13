@@ -11,16 +11,18 @@ import { getXY } from './common/utils';
 
 interface Props {
 	color: string;
+	onDrawEnd(result: any[]): void;
 }
 
 const Canvas = forwardRef<HTMLCanvasElement, Props>(
-	({ color }, forwardedRef) => {
+	({ color, onDrawEnd }, forwardedRef) => {
 		const ref = useRef<HTMLCanvasElement>(null);
 		const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 		const [isDrawing, setIsDrawing] = useState(false);
 		const [lineWidth, setLineWidth] = useState(3);
 		const [x, setX] = useState(0);
 		const [y, setY] = useState(0);
+		const [drawing, setDrawing] = useState<any>([]);
 
 		useImperativeHandle<HTMLCanvasElement | null, HTMLCanvasElement | null>(
 			forwardedRef,
@@ -53,19 +55,27 @@ const Canvas = forwardRef<HTMLCanvasElement, Props>(
 				if (!ctx) return;
 				ctx.lineTo(x, y);
 				ctx.stroke();
+
+				const line = { x, y, color, lineWidth }
+				setDrawing((d: any) => [...drawing, line]);
 			}
 		};
 
 		const onStart = (): void => {
 			if (!ctx) return;
-			ctx.moveTo(x, y);
 			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(x, y);
+			ctx.stroke();
+			setDrawing((d: any) => [...drawing, { x, y, color, lineWidth }, { x, y, color, lineWidth }])
 			setIsDrawing(true);
 		};
 
 		const onEnd = () => {
 			if (!ctx) return;
 			ctx.closePath();
+			onDrawEnd(drawing)
+			setDrawing((d: any) => []);
 			setIsDrawing(false);
 		};
 
