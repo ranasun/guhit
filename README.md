@@ -20,7 +20,7 @@ npm run build
 npm run preview
 ```
 
-## Techbology Stack
+## Technology Stack
 
 This application is built with the following technologies:
 
